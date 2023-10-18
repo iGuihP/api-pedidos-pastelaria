@@ -43,7 +43,7 @@ class CustomerController extends Controller
         } catch (Exception $exception) {
             $messagesError = $this->getMessageException($exception);
 
-            Log::error('Failed to create a new customer. Location: CustomerController::createCustomer', $messagesError);
+            Log::error('Failed to create a new customer. Location: CustomerController::create', $messagesError);
             return response()->json($messagesError, $this->getHttpCode($exception));
         }
     }
