@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Customer\Services\CreateCustomerService;
+use App\Customer\Services\DeleteCustomerService;
 use App\Customer\Services\FindCustomerByIdService;
 use App\Customer\Services\FindCustomerService;
 use App\Customer\Services\ListAllCustomersService;
@@ -103,7 +104,7 @@ class CustomerController extends Controller
         } catch (Exception $exception) {
             $messagesError = $this->getMessageException($exception);
 
-            Log::error('Failed to find customers by filters. Location: CustomerController::listAll', $messagesError);
+            Log::error('Failed to list all customers. Location: CustomerController::listAll', $messagesError);
             return response()->json($messagesError, $this->getHttpCode($exception));
         }
     }
@@ -133,7 +134,22 @@ class CustomerController extends Controller
         } catch (Exception $exception) {
             $messagesError = $this->getMessageException($exception);
 
-            Log::error('Failed to find customers by filters. Location: CustomerController::listAll', $messagesError);
+            Log::error('Failed to update a customer. Location: CustomerController::update', $messagesError);
+            return response()->json($messagesError, $this->getHttpCode($exception));
+        }
+    }
+
+    public function delete($id) {
+        try {
+            $customerRepository = new CustomerRepository();
+            $deleteCustomerService = new DeleteCustomerService($customerRepository);
+            $deleteCustomerService->delete($id);
+
+            return response()->json([], 204);
+        } catch (Exception $exception) {
+            $messagesError = $this->getMessageException($exception);
+
+            Log::error('Failed to delete a customer. Location: CustomerController::delete', $messagesError);
             return response()->json($messagesError, $this->getHttpCode($exception));
         }
     }
