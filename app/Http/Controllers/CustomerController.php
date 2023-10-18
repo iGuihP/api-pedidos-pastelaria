@@ -6,6 +6,7 @@ use App\Customer\Services\CreateCustomerService;
 use App\Customer\Services\FindCustomerByIdService;
 use App\Customer\Services\FindCustomerService;
 use App\Customer\Services\ListAllCustomersService;
+use App\Customer\Services\UpdateCustomerService;
 use App\Services\CustomerRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -99,6 +100,36 @@ class CustomerController extends Controller
             return response()->json([
                 'data' => $customersFound
             ], 200);
+        } catch (Exception $exception) {
+            $messagesError = $this->getMessageException($exception);
+
+            Log::error('Failed to find customers by filters. Location: CustomerController::listAll', $messagesError);
+            return response()->json($messagesError, $this->getHttpCode($exception));
+        }
+    }
+
+    public function update($id, Request $request) {
+        $params = $request->all();
+        try {
+            $this->validateRequestParameters(
+                [
+                    'name' => 'required|string',
+                    'email' => 'required|email',
+                    'telephone' => 'required|string|min:10|max:11',
+                    'birth' => 'required|date',
+                    'address' => 'required|string',
+                    'complement' => 'required|string',
+                    'neighborhood' => 'required|string',
+                    'zipcode' => 'required|string|min:8|max:8'
+                ],
+                $params
+            );
+
+            $customerRepository = new CustomerRepository();
+            $updateCustomerService = new UpdateCustomerService($customerRepository);
+            $updateCustomerService->update($id, $params);
+
+            return response()->json([], 204);
         } catch (Exception $exception) {
             $messagesError = $this->getMessageException($exception);
 
