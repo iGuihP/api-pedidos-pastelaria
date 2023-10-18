@@ -18,6 +18,6 @@ interface CustomerRepositoryInterface
     public function findById(int $id);
     public function checkIfAlreadyExistsByEmail(string $email);
     public function listAll();
-    public function update($customer, array $dados);
+    public function update($customer, array $data);
     public function delete($customer);
 }

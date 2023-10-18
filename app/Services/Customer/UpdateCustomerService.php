@@ -30,11 +30,11 @@ class UpdateCustomerService
     }
 
     private function updateCustomer($customer, array $data) {
-        $createdCustomer = $this->customerRepository->update(
+        $updatedCustomer = $this->customerRepository->update(
             $customer,
             $data
         );
 
-        return $createdCustomer;
+        return $updatedCustomer;
     }
 }

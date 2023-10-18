@@ -15,7 +15,7 @@ class FindCustomerByIdService
     }
 
     public function find(int $id) {
-        Log::info("Running the service to list all customers.");
+        Log::info("Running the service to find customer by ID: ". $id);
         return $this->findById($id);
     }
 

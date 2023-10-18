@@ -98,9 +98,9 @@ class CustomerRepository implements CustomerRepositoryInterface
         ]);
     }
 
-    public function update($customer, array $dados) {
+    public function update($customer, array $data) {
         Log::info("Updating a customer.");
-        return $customer->update($dados);
+        return $customer->update($data);
     }
 
     public function delete($customer) {

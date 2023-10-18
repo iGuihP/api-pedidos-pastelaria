@@ -30,10 +30,10 @@ class DeleteCustomerService
     }
 
     private function deleteCustomer($customer) {
-        $createdCustomer = $this->customerRepository->delete(
+        $deletedCustomer = $this->customerRepository->delete(
             $customer,
         );
 
-        return $createdCustomer;
+        return $deletedCustomer;
     }
 }
