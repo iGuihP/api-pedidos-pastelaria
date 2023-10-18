@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Log;
 
 class CustomerController extends Controller
 {
-    public function createCustomer(Request $request) {
+    public function create(Request $request) {
         $params = $request->all();
 
         try {
