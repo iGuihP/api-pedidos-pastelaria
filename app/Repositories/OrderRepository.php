@@ -25,7 +25,7 @@ class OrderRepository implements OrderRepositoryInterface
         ]);
         $orderModel->where('orders.id', $orderId);
 
-        return $orderModel->exists();
+        return $orderModel->first();
     }
 
     public function findById(int $orderId) {
@@ -70,26 +70,13 @@ class OrderRepository implements OrderRepositoryInterface
         return $orderModel->get();
     }
 
-    public function listAll() {
-        Log::info("Listing all products registered.");
-        // return ProductModel::get([
-        //     'id',
-        //     'name',
-        //     'price',
-        //     'image',
-        // ]);
-        throw new Exception('Not implemented yet.', 501);
+    public function update($order, array $data) {
+        Log::info("Updating a order.");
+        return $order->update($data);
     }
 
-    public function update($product, array $data) {
-        // Log::info("Updating a product.");
-        // return $product->update($data);
-        throw new Exception('Not implemented yet.', 501);
-    }
-
-    public function delete($product) {
-        // Log::info("Deleting a product.");
-        // return $product->delete();
-        throw new Exception('Not implemented yet.', 501);
+    public function delete($order) {
+        Log::info("Deleting a order.");
+        return $order->delete();
     }
 }

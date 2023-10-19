@@ -43,10 +43,9 @@ Route::group(['namespace' => 'Product', 'prefix' => 'product'], function () {
 });
 
 Route::group(['namespace' => 'Order', 'prefix' => 'order'], function () {
-    Route::post('/', [App\Http\Controllers\ProductController::class, 'create']);
-    Route::get('/', [App\Http\Controllers\ProductController::class, 'listAll']);
-    Route::get('/filters', [App\Http\Controllers\ProductController::class, 'findByFilters']);
-    Route::get('/{id}', [App\Http\Controllers\ProductController::class, 'findById']);
-    Route::put('/{id}', [App\Http\Controllers\ProductController::class, 'update']);
-    Route::delete('/{id}', [App\Http\Controllers\ProductController::class, 'delete']);
+    Route::post('/', [App\Http\Controllers\OrderController::class, 'create']);
+    Route::get('/customer/{id}', [App\Http\Controllers\OrderController::class, 'findByCustomerId']);
+    Route::get('/{id}', [App\Http\Controllers\OrderController::class, 'findById']);
+    Route::put('/{id}', [App\Http\Controllers\OrderController::class, 'update']);
+    Route::delete('/{id}', [App\Http\Controllers\OrderController::class, 'delete']);
 });

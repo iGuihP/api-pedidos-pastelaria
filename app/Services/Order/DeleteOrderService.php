@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Services\Product;
+namespace App\Services\Order;
 
 use App\Repositories\OrderRepositoryInterface;
 use App\Repositories\ProductsOrderRepositoryInterface;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
-class DeleteProductService
+class DeleteOrderService
 {
     private $orderRepository;
     private $productsOrderRepository;

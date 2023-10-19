@@ -44,7 +44,7 @@ class Controller extends BaseController
     {
         $httpCode = $exception->getCode();
 
-        if(!$httpCode || $httpCode < 100 || !is_int($httpCode)){
+        if(!$httpCode || $httpCode < 100 || $httpCode > 599 || !is_int($httpCode)) {
             $httpCode = 500;
         }
 

@@ -22,16 +22,17 @@ class UpdateOrderService
     public function update(int $orderId, array $newProductsId): void {
         Log::info("Running the service to update a order.", ['newProductsId' => $newProductsId]);
         
-        $this->checkIfOrderExists($orderId);
+        $this->findOrderById($orderId);
         $formattedProductsOrderData = $this->formatProductsOrderData($orderId, $newProductsId);
         $this->updateProductsOrder($orderId, $formattedProductsOrderData);
     }
 
-    private function checkIfOrderExists(int $id): void {
+    private function findOrderById(int $id) {
         $orderFound = $this->orderRepository->findSingleOrderById($id);
         if (!$orderFound) {
             throw new Exception("Order not found.", 404);
         }
+        return $orderFound;
     }
 
     private function formatProductsOrderData(int $orderId, array $productsId) {

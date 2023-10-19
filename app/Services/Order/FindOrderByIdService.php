@@ -19,7 +19,13 @@ class FindOrderByIdService
     public function find(int $id) {
         Log::info("Running the service to find order by ID: ".$id);
         $ordersFound = $this->findById($id);
-        return $this->formatOrders($ordersFound);
+        $formattedOrders = $this->formatOrders($ordersFound);
+
+        if(count($formattedOrders) === 0) {
+            throw new Exception("Order not found.", 404);
+        }
+
+        return $formattedOrders[0];
     }
 
     private function findById(int $id) {
@@ -53,6 +59,6 @@ class FindOrderByIdService
             ];
         }
 
-        return array_values($formattedOrders)[0];
+        return array_values($formattedOrders);
     }
 }

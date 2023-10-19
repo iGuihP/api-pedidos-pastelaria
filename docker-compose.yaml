@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  api-pedidos-pastelaria:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+      target: dev
+    image: guidev/api-pedidos-pastelaria:dev
+    container_name: api-pedidos-pastelaria
+    ports:
+      - "5000:80"
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - network-pedidos-pastelaria
+
+networks:
+  network-pedidos-pastelaria:
+    driver: bridge

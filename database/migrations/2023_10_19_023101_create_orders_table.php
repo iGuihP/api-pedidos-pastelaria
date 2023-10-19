@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('customer_id')->unsigned();
             $table->foreign('customer_id')->references('id')->on('customers');
+            $table->timestamp('deleted_at')->nullable();
             $table->timestamps();
         });
     }

@@ -8,6 +8,7 @@ use App\Services\Order\FindOrderByCustomerIdService;
 use App\Services\Order\FindOrderByIdService;
 use App\Repositories\OrderRepository;
 use App\Repositories\ProductsOrderRepository;
+use App\Services\Order\DeleteOrderService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -85,6 +86,22 @@ class OrderController extends Controller
             $messagesError = $this->getMessageException($exception);
 
             Log::error('Failed to update a order. Location: OrderController::update', $messagesError);
+            return response()->json($messagesError, $this->getHttpCode($exception));
+        }
+    }
+
+    public function delete($id) {
+        try {
+            $orderRepository = new OrderRepository();
+            $productsOrderRepository = new ProductsOrderRepository();
+            $updateOrderService = new DeleteOrderService($orderRepository, $productsOrderRepository);
+            $updateOrderService->delete((int) $id);
+
+            return response(null, 204);
+        } catch (Exception $exception) {
+            $messagesError = $this->getMessageException($exception);
+
+            Log::error('Failed to delete a order. Location: OrderController::delete', $messagesError);
             return response()->json($messagesError, $this->getHttpCode($exception));
         }
     }

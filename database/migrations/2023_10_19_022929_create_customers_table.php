@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('complement')->nullable();
             $table->string('neighborhood');
             $table->string('zipcode');
+            $table->timestamp('deleted_at')->nullable();
             $table->timestamps();
         });
     }
