@@ -13,19 +13,19 @@ class CreateProductService
         $this->productRepository = $productRepository;
     }
 
-    public function create(array $params): int {
+    public function create(array $params, $image): int {
         Log::info("Running the service to create a new product.", $params);
-        
-        $createdProduct = $this->createProduct($params);
+        $uploadPath = $image->store('/', 'local');
+        $createdProduct = $this->createProduct($params, $uploadPath);
 
         return $createdProduct->id;
     }
 
-    private function createProduct(array $params) {
+    private function createProduct(array $params, string $imagePath) {
         $createdProduct = $this->productRepository->create(
             $params['name'],
             $params['price'],
-            $params['image'],
+            $imagePath,
         );
 
         return $createdProduct;

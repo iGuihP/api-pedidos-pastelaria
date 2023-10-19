@@ -40,6 +40,7 @@ Route::group(['namespace' => 'Product', 'prefix' => 'product'], function () {
     Route::get('/{id}', [App\Http\Controllers\ProductController::class, 'findById']);
     Route::put('/{id}', [App\Http\Controllers\ProductController::class, 'update']);
     Route::delete('/{id}', [App\Http\Controllers\ProductController::class, 'delete']);
+    Route::get('/image/{fileName}', [App\Http\Controllers\ProductController::class, 'viewImage']);
 });
 
 Route::group(['namespace' => 'Order', 'prefix' => 'order'], function () {

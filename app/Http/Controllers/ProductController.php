@@ -23,14 +23,14 @@ class ProductController extends Controller
                 [
                     'name' => 'required|string',
                     'price' => 'required|numeric|gt:0',
-                    'image' => 'required|string',
+                    'image' => 'required',
                 ],
                 $params
             );
 
             $productRepository = new ProductRepository();
             $createProductService = new CreateProductService($productRepository);
-            $createdProductId = $createProductService->create($params);
+            $createdProductId = $createProductService->create($params, $request->file('image'));
 
             return response()->json([
                 'newProductId' => $createdProductId
@@ -137,6 +137,17 @@ class ProductController extends Controller
             $messagesError = $this->getMessageException($exception);
 
             Log::error('Failed to delete a product. Location: ProductController::delete', $messagesError);
+            return response()->json($messagesError, $this->getHttpCode($exception));
+        }
+    }
+
+    public function viewImage($fileName) {
+        try {
+            return response()->file(storage_path('app/public/' . $fileName));
+        } catch (Exception $exception) {
+            $messagesError = $this->getMessageException($exception);
+
+            Log::error('Failed to delete a product. Location: ProductController::viewImage', $messagesError);
             return response()->json($messagesError, $this->getHttpCode($exception));
         }
     }
