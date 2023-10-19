@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Repositories;
 
 use App\Models\OrderModel;
 use App\Models\ProductsOrderModel;
@@ -34,12 +34,6 @@ class ProductsOrderRepository implements ProductsOrderRepositoryInterface
         $productsOrderModel = ProductsOrderModel::where('order_id', $orderId);
 
         return $productsOrderModel->delete();
-    }
-
-    public function update($product, array $data) {
-        // Log::info("Updating a product.");
-        // return $product->update($data);
-        throw new Exception('Not implemented yet.', 501);
     }
 
     public function delete($product) {

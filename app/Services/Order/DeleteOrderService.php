@@ -28,10 +28,7 @@ class DeleteProductService
     }
 
     private function deleteProductsOrder(int $orderId): void {
-        $productsOrderFound = $this->productsOrderRepository->deleteByOrderId($orderId);
-        if (!$productsOrderFound) {
-            throw new Exception("Failed to delete products order.", 500);
-        }
+        $this->productsOrderRepository->deleteByOrderId($orderId);
     }
 
     private function findOrderById(int $orderId) {
@@ -44,9 +41,6 @@ class DeleteProductService
     }
 
     private function deleteOrder($order): void {
-        $deletedOrder = $this->orderRepository->delete($order);
-        if (!$deletedOrder) {
-            throw new Exception("Failed to delete a order.", 500);
-        }
+        $this->orderRepository->delete($order);
     }
 }

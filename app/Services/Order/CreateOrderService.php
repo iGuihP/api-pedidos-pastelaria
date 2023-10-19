@@ -48,9 +48,7 @@ class CreateOrderService
     }
 
     private function createProductOrder(array $productsOrder) {
-        $createdProduct = $this->productsOrderRepository->create(
-            $productsOrder
-        );
+        $createdProduct = $this->productsOrderRepository->create($productsOrder);
 
         if(!$createdProduct) {
             throw new Exception("Houve uma falha ao inserir produtos no pedido.", 500);

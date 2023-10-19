@@ -17,6 +17,17 @@ class OrderRepository implements OrderRepositoryInterface
         ]);
     }
 
+    public function findSingleOrderById(int $orderId) {
+        Log::info("Searching single order by ID: ". $orderId);
+
+        $orderModel = OrderModel::select([
+            'orders.*',
+        ]);
+        $orderModel->where('orders.id', $orderId);
+
+        return $orderModel->exists();
+    }
+
     public function findById(int $orderId) {
         Log::info("Searching order by ID: ". $orderId);
 

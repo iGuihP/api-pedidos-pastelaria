@@ -61,7 +61,7 @@ class Controller extends BaseController
      * @return bool
      * @throws Exception Caso a validação falhe uma Exception será enviada.
     */
-    protected function validateParameters(array $rules, array $params): bool
+    protected function validateRequestParameters(array $rules, array $params): bool
     {
         $validator = Validator::make($params, $rules);
 

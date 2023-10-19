@@ -5,6 +5,7 @@ namespace App\Repositories;
 interface OrderRepositoryInterface
 {
     public function create(int $customerId);
+    public function findSingleOrderById(int $orderId);
     public function findById(int $orderId);
     public function findByCustomerId(int $customerId);
     public function listAll();

@@ -30,9 +30,6 @@ class DeleteProductService
     }
 
     private function deleteProduct($product): void {
-        $deletedProduct = $this->productRepository->delete($product);
-        if (!$deletedProduct) {
-            throw new Exception("Failed to delete a product.", 500);
-        }
+        $this->productRepository->delete($product);
     }
 }

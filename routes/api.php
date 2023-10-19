@@ -25,4 +25,4 @@ use Illuminate\Support\Facades\Route;
     // });
 // });
 
-Route::get('/order/{id}', [App\Http\Controllers\OrderController::class, 'findById']);
+Route::get('/order/{id}', [App\Http\Controllers\OrderController::class, 'update']);
