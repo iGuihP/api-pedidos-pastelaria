@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Product\Services;
+namespace App\Services\Product;
 
 use App\Repositories\ProductRepositoryInterface;
 use Exception;
@@ -15,7 +15,7 @@ class DeleteProductService
     }
 
     public function delete(int $productId): void {
-        Log::info("Running the service to delete a product ID: ", $productId);
+        Log::info("Running the service to delete a product ID: ". $productId);
         
         $productFound = $this->findProductById($productId);
         $this->deleteProduct($productFound);

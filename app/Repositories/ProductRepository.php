@@ -10,7 +10,7 @@ class ProductRepository implements ProductRepositoryInterface
 {
     public function create(
         string $name,
-        int $price,
+        float $price,
         string $image,
     ) {
         Log::info("Inserting a new product into the database, product name: " . $name);

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Product\Services\CreateProductService;
-use App\Product\Services\DeleteProductService;
-use App\Product\Services\FindProductByFilterService;
-use App\Product\Services\FindProductByIdService;
-use App\Product\Services\ListAllProductsService;
-use App\Product\Services\UpdateProductService;
+use App\Services\Product\CreateProductService;
+use App\Services\Product\DeleteProductService;
+use App\Services\Product\FindProductByFilterService;
+use App\Services\Product\FindProductByIdService;
+use App\Services\Product\ListAllProductsService;
+use App\Services\Product\UpdateProductService;
 use App\Repositories\ProductRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -22,7 +22,7 @@ class ProductController extends Controller
             $this->validateRequestParameters(
                 [
                     'name' => 'required|string',
-                    'price' => 'required|numeric',
+                    'price' => 'required|numeric|gt:0',
                     'image' => 'required|string',
                 ],
                 $params
@@ -75,9 +75,7 @@ class ProductController extends Controller
             $findProductByIdService = new FindProductByIdService($productRepository);
             $productsFound = $findProductByIdService->find((int) $id);
 
-            return response()->json([
-                'data' => $productsFound
-            ], 200);
+            return response()->json($productsFound, 200);
         } catch (Exception $exception) {
             $messagesError = $this->getMessageException($exception);
 

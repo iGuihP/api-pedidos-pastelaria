@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Product\Services;
+namespace App\Services\Product;
 
 use App\Repositories\OrderRepositoryInterface;
 use App\Repositories\ProductsOrderRepositoryInterface;
@@ -20,7 +20,7 @@ class DeleteProductService
     }
 
     public function delete(int $orderId): void {
-        Log::info("Running the service to delete a order ID: ", $orderId);
+        Log::info("Running the service to delete a order ID: " . $orderId);
 
         $this->deleteProductsOrder($orderId);
         $orderFound = $this->findOrderById($orderId);

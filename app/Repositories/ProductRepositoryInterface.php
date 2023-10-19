@@ -6,7 +6,7 @@ interface ProductRepositoryInterface
 {
     public function create(
         string $name,
-        int $price,
+        float $price,
         string $image,
     );
     public function findByFilters(string $name);
