@@ -14,12 +14,12 @@ Para configurar o ambiente deste projeto, siga os passos abaixo:
 
 3. Após a instalação do Docker e do Docker Compose, abra um terminal de comando.
 
-4. Navegue até o diretório raiz do projeto, onde está localizado o arquivo `docker-compose.yml`.
+4. Navegue até o diretório raiz do projeto, onde está localizado o arquivo `docker-compose.yaml`.
 
 5. Execute o seguinte comando para iniciar os serviços do projeto em segundo plano:
 
    ```bash
-   docker-compose up -d
+   docker compose up -d
 Após isso, o projeto será iniciado na porta 5000. Podendo ser acessada através do URL: http://host.docker.internal:5000/
 
 ## Variáveis de Ambiente
