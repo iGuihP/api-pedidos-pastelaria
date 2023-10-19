@@ -38,7 +38,7 @@ class CustomerController extends Controller
             $createdCustomerId = $createCustomerService->create($params);
 
             return response()->json([
-                'customerId' => $createdCustomerId
+                'newCustomerId' => $createdCustomerId
             ], 201);
         } catch (Exception $exception) {
             $messagesError = $this->getMessageException($exception);
@@ -129,8 +129,8 @@ class CustomerController extends Controller
             $customerRepository = new CustomerRepository();
             $updateCustomerService = new UpdateCustomerService($customerRepository);
             $updateCustomerService->update($id, $params);
-
-            return response()->json([], 204);
+            
+            return response(null, 204);
         } catch (Exception $exception) {
             $messagesError = $this->getMessageException($exception);
 
@@ -144,8 +144,8 @@ class CustomerController extends Controller
             $customerRepository = new CustomerRepository();
             $deleteCustomerService = new DeleteCustomerService($customerRepository);
             $deleteCustomerService->delete($id);
-
-            return response()->json([], 204);
+            
+            return response(null, 204);
         } catch (Exception $exception) {
             $messagesError = $this->getMessageException($exception);
 

@@ -33,7 +33,7 @@ class ProductController extends Controller
             $createdProductId = $createProductService->create($params);
 
             return response()->json([
-                'productId' => $createdProductId
+                'newProductId' => $createdProductId
             ], 201);
         } catch (Exception $exception) {
             $messagesError = $this->getMessageException($exception);
@@ -118,8 +118,8 @@ class ProductController extends Controller
             $productRepository = new ProductRepository();
             $updateProductService = new UpdateProductService($productRepository);
             $updateProductService->update($id, $params);
-
-            return response()->json([], 204);
+            
+            return response(null, 204);
         } catch (Exception $exception) {
             $messagesError = $this->getMessageException($exception);
 
@@ -133,8 +133,8 @@ class ProductController extends Controller
             $productRepository = new ProductRepository();
             $deleteProductService = new DeleteProductService($productRepository);
             $deleteProductService->delete($id);
-
-            return response()->json([], 204);
+            
+            return response(null, 204);
         } catch (Exception $exception) {
             $messagesError = $this->getMessageException($exception);
 
