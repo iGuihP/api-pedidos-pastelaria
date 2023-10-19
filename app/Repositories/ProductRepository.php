@@ -42,14 +42,16 @@ class ProductRepository implements ProductRepositoryInterface
     public function findById(int $id) {
         Log::info("Searching product by ID: ". $id);
 
-        $productModel = ProductModel::select([
+        $product = ProductModel::select([
             'id',
             'name',
             'price',
             'image',
-        ])->where('id', $id);
+            'created_at',
+            'updated_at'
+        ])->find($id);
 
-        return $productModel->first();
+        return $product;
     }
 
     public function listAll() {
@@ -59,6 +61,8 @@ class ProductRepository implements ProductRepositoryInterface
             'name',
             'price',
             'image',
+            'created_at',
+            'updated_at'
         ]);
     }
 

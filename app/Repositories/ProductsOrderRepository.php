@@ -23,6 +23,8 @@ class ProductsOrderRepository implements ProductsOrderRepositoryInterface
             'id',
             'order_id',
             'product_id',
+            'created_at',
+            'updated_at'
         ])->where('order_id', $orderId);
 
         return $productsOrderModel->get();
@@ -34,11 +36,5 @@ class ProductsOrderRepository implements ProductsOrderRepositoryInterface
         $productsOrderModel = ProductsOrderModel::where('order_id', $orderId);
 
         return $productsOrderModel->delete();
-    }
-
-    public function delete($product) {
-        // Log::info("Deleting a product.");
-        // return $product->delete();
-        throw new Exception('Not implemented yet.', 501);
     }
 }

@@ -39,7 +39,7 @@ class OrderRepository implements OrderRepositoryInterface
             'products.name as product_name',
             'products.price as product_price',
             'products.image as product_image',
-            'orders.created_at'
+            'orders.created_at',
         ]);
         $orderModel->join('products_order', 'orders.id', '=', 'products_order.order_id');
         $orderModel->join('products', 'products.id', '=', 'products_order.product_id');

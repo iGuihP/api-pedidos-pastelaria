@@ -23,7 +23,7 @@ class ProductController extends Controller
                 [
                     'name' => 'required|string',
                     'price' => 'required|numeric|gt:0',
-                    'image' => 'required',
+                    'image' => 'required|mimes:jpeg,png,jpg,gif|max:2048',
                 ],
                 $params
             );

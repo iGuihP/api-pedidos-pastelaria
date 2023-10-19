@@ -45,7 +45,8 @@ class CustomerRepository implements CustomerRepositoryInterface
             'complement',
             'neighborhood',
             'zipcode',
-            'created_at'
+            'created_at',
+            'updated_at'
         ]);
 
         if($email) {
@@ -71,7 +72,8 @@ class CustomerRepository implements CustomerRepositoryInterface
             'complement',
             'neighborhood',
             'zipcode',
-            'created_at'
+            'created_at',
+            'updated_at'
         ])->where('id', $id);
 
         return $customerModel->first();
@@ -89,7 +91,8 @@ class CustomerRepository implements CustomerRepositoryInterface
             'complement',
             'neighborhood',
             'zipcode',
-            'created_at'
+            'created_at',
+            'updated_at'
         ]);
     }
 
