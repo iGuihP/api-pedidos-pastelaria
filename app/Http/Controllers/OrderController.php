@@ -21,7 +21,7 @@ class OrderController extends Controller
         } catch (Exception $exception) {
             $messagesError = $this->getMessageException($exception);
 
-            Log::error('Failed to find products by ID. Location: OrderController::findById', $messagesError);
+            Log::error('Failed to find orders by ID. Location: OrderController::findById', $messagesError);
             return response()->json($messagesError, $this->getHttpCode($exception));
         }
     }
@@ -35,7 +35,7 @@ class OrderController extends Controller
         } catch (Exception $exception) {
             $messagesError = $this->getMessageException($exception);
 
-            Log::error('Failed to find products by ID. Location: OrderController::findByCustomerId', $messagesError);
+            Log::error('Failed to find orders by Customer ID. Location: OrderController::findByCustomerId', $messagesError);
             return response()->json($messagesError, $this->getHttpCode($exception));
         }
     }
