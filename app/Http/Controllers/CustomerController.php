@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Customer\Services\CreateCustomerService;
-use App\Customer\Services\DeleteCustomerService;
-use App\Customer\Services\FindCustomerByIdService;
-use App\Customer\Services\FindCustomerService;
-use App\Customer\Services\ListAllCustomersService;
-use App\Customer\Services\UpdateCustomerService;
-use App\Services\CustomerRepository;
+use App\Services\Customer\CreateCustomerService;
+use App\Services\Customer\DeleteCustomerService;
+use App\Services\Customer\FindCustomerByIdService;
+use App\Services\Customer\FindCustomerService;
+use App\Services\Customer\ListAllCustomersService;
+use App\Services\Customer\UpdateCustomerService;
+use App\Repositories\CustomerRepository;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -22,7 +22,7 @@ class CustomerController extends Controller
             $this->validateRequestParameters(
                 [
                     'name' => 'required|string',
-                    'email' => 'required|email',
+                    'email' => 'required|email|unique:customers',
                     'telephone' => 'required|string|min:10|max:11',
                     'birth' => 'required|date',
                     'address' => 'required|string',
@@ -54,8 +54,8 @@ class CustomerController extends Controller
         try {
             $this->validateRequestParameters(
                 [
-                    'name' => 'required_without_all:email,id|string',
-                    'email' => 'required_without_all:name,id|email',
+                    'name' => 'required_without_all:email|string',
+                    'email' => 'required_without_all:name|email',
                 ],
                 $params
             );
@@ -114,14 +114,14 @@ class CustomerController extends Controller
         try {
             $this->validateRequestParameters(
                 [
-                    'name' => 'required|string',
-                    'email' => 'required|email',
-                    'telephone' => 'required|string|min:10|max:11',
-                    'birth' => 'required|date',
-                    'address' => 'required|string',
-                    'complement' => 'required|string',
-                    'neighborhood' => 'required|string',
-                    'zipcode' => 'required|string|min:8|max:8'
+                    'name' => 'string',
+                    'email' => 'email',
+                    'telephone' => 'string|min:10|max:11',
+                    'birth' => 'date',
+                    'address' => 'string',
+                    'complement' => 'string',
+                    'neighborhood' => 'string',
+                    'zipcode' => 'string|min:8|max:8'
                 ],
                 $params
             );

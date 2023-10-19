@@ -32,11 +32,6 @@ class CustomerRepository implements CustomerRepositoryInterface
         ]);
     }
 
-    public function checkIfAlreadyExistsByEmail(string $email) {
-        Log::info("Searching customer by EMAIL: " . $email);
-        return CustomerModel::where('email', $email)->exists();
-    }
-
     public function findByFilters(string $email = null, string $name = null) {
         Log::info("Searching customers by filters.", ['email' => $email, 'name' => $name]);
 

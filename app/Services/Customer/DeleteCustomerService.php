@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Customer\Services;
+namespace App\Services\Customer;
 
 use App\Repositories\CustomerRepositoryInterface;
 use Exception;
@@ -15,7 +15,7 @@ class DeleteCustomerService
     }
 
     public function delete(int $customerId): void {
-        Log::info("Running the service to delete a customer ID: ", $customerId);
+        Log::info("Running the service to delete a customer ID: ", ['customer_id' => $customerId]);
         
         $customerFound = $this->findCustomerById($customerId);
         $this->deleteCustomer($customerFound);

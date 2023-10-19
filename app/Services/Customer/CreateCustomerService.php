@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Customer\Services;
+namespace App\Services\Customer;
 
 use App\Repositories\CustomerRepositoryInterface;
 use Exception;
@@ -23,24 +23,9 @@ class CreateCustomerService
     public function create(array $params): int {
         Log::info("Running the service to create a new customer.", $params);
         
-        $this->checkIfCustomerExistsByEmail($params['email']);
         $createdCustomer = $this->createCustomer($params);
 
         return $createdCustomer->id;
-    }
-
-    /**
-     * Checks if a customer exists in the database by email.
-     *
-     * @param string $email The email of the customer to check.
-     * @throws Exception If the customer already exists in the database.
-     * @return void
-     */
-    private function checkIfCustomerExistsByEmail(string $email): void {
-        $customerFound = $this->customerRepository->checkIfAlreadyExistsByEmail($email);
-        if ($customerFound) {
-            throw new Exception("Customer already existing in the database", 409);
-        }
     }
 
     /**

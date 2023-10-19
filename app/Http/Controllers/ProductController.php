@@ -8,7 +8,7 @@ use App\Product\Services\FindProductByFilterService;
 use App\Product\Services\FindProductByIdService;
 use App\Product\Services\ListAllProductsService;
 use App\Product\Services\UpdateProductService;
-use App\Services\ProductRepository;
+use App\Repositories\ProductRepository;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;

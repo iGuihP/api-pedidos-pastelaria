@@ -24,5 +24,20 @@ use Illuminate\Support\Facades\Route;
     //     Route::delete('/{id}', [App\Http\Controllers\CustomerController::class, 'delete']);
     // });
 // });
+Route::group(['namespace' => 'Customer', 'prefix' => 'customer'], function () {
+    Route::post('/', [App\Http\Controllers\CustomerController::class, 'create']);
+    Route::get('/', [App\Http\Controllers\CustomerController::class, 'listAll']);
+    Route::get('/filters', [App\Http\Controllers\CustomerController::class, 'findByFilters']);
+    Route::get('/{id}', [App\Http\Controllers\CustomerController::class, 'findById']);
+    Route::put('/{id}', [App\Http\Controllers\CustomerController::class, 'update']);
+    Route::delete('/{id}', [App\Http\Controllers\CustomerController::class, 'delete']);
+});
 
-Route::get('/order', [App\Http\Controllers\OrderController::class, 'create']);
+Route::group(['namespace' => 'Product', 'prefix' => 'product'], function () {
+    Route::post('/', [App\Http\Controllers\CustomerController::class, 'create']);
+    Route::get('/', [App\Http\Controllers\CustomerController::class, 'listAll']);
+    Route::get('/filters', [App\Http\Controllers\CustomerController::class, 'findByFilters']);
+    Route::get('/{id}', [App\Http\Controllers\CustomerController::class, 'findById']);
+    Route::put('/{id}', [App\Http\Controllers\CustomerController::class, 'update']);
+    Route::delete('/{id}', [App\Http\Controllers\CustomerController::class, 'delete']);
+});

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Customer\Services;
+namespace App\Services\Customer;
 
 use App\Repositories\CustomerRepositoryInterface;
 use Exception;

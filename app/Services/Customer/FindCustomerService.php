@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Customer\Services;
+namespace App\Services\Customer;
 
 use App\Repositories\CustomerRepositoryInterface;
 use Exception;
@@ -18,8 +18,8 @@ class FindCustomerService
         Log::info("Running the service to find a customer by filters.", $params);
         
         $customerFound = $this->findCustomerByFilters(
-            $params['email'],
-            $params['name']
+            $params['email'] ?? null,
+            $params['name'] ?? null
         );
 
         return $customerFound;
