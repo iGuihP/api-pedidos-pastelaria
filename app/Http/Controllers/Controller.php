@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Log;
 
 class Controller extends BaseController
 {
@@ -43,7 +44,7 @@ class Controller extends BaseController
     {
         $httpCode = $exception->getCode();
 
-        if(!$httpCode || $httpCode < 100){
+        if(!$httpCode || $httpCode < 100 || !is_int($httpCode)){
             $httpCode = 500;
         }
 

@@ -24,3 +24,5 @@ use Illuminate\Support\Facades\Route;
     //     Route::delete('/{id}', [App\Http\Controllers\CustomerController::class, 'delete']);
     // });
 // });
+
+Route::get('/order/{id}', [App\Http\Controllers\OrderController::class, 'findById']);

@@ -3,11 +3,10 @@
 namespace App\Services\Order;
 
 use App\Repositories\OrderRepositoryInterface;
-use App\Repositories\ProductsOrderRepositoryInterface;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
-class FindOrderByIdService
+class FindOrderByCustomerIdService
 {
     private $orderRepository;
     public function __construct(
@@ -16,14 +15,14 @@ class FindOrderByIdService
         $this->orderRepository = $orderRepository;
     }
 
-    public function find(int $id) {
-        Log::info("Running the service to find order by ID: ".$id);
-        $ordersFound = $this->findById($id);
+    public function find(int $customerId) {
+        Log::info("Running the service to find order by Customer ID: ".$customerId);
+        $ordersFound = $this->findByCustomerId($customerId);
         return $this->formatOrders($ordersFound);
     }
 
-    private function findById(int $id) {
-        $orderFound = $this->orderRepository->findById($id);
+    private function findByCustomerId(int $customerId) {
+        $orderFound = $this->orderRepository->findByCustomerId($customerId);
         if (!$orderFound) {
             throw new Exception("Order not found.", 404);
         }
@@ -53,6 +52,6 @@ class FindOrderByIdService
             ];
         }
 
-        return array_values($formattedOrders)[0];
+        return array_values($formattedOrders);
     }
 }
