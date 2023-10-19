@@ -8,9 +8,14 @@ RUN apk update && apk upgrade \
     && apk add curl libxml2-dev \
     && apk add php81-fpm php81-opcache php81-pdo php81-mysqli php81-pdo_mysql \
     && apk add php81-gd php81-zlib php81-curl php81-iconv php81-phar \
-    && apk add gd \
+    && apk add php81-pecl-mongodb \
+    && apk add php81-mbstring \
+    && apk add php81-dom \
+    && apk add php81-xml php81-xmlwriter php81-tokenizer \
     && apk add php81-fileinfo \
     && apk add php81-session
+
+RUN apk add php81-redis
 
 RUN apk add composer
 
@@ -32,3 +37,16 @@ FROM default AS dev
 ENV ENV=development
 ENV PHP_IDE_CONFIG="serverName=host.docker.internal"
 RUN apk add php81-pecl-xdebug
+COPY .docker/xdebug.ini /etc/php81/conf.d/docker-php-ext-xdebug.ini
+
+FROM default AS build
+ENV ENV=production
+WORKDIR /var/www/html
+COPY . /var/www/html
+RUN composer install --no-dev --optimize-autoloader
+
+FROM default AS prod
+ENV ENV=production
+WORKDIR /var/www/html
+COPY --from=build /var/www/html /var/www/html
+RUN chmod 777 /var/www/html -Rf

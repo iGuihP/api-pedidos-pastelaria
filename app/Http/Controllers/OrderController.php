@@ -8,11 +8,13 @@ use App\Services\Order\UpdateOrderService;
 use App\Services\Order\FindOrderByCustomerIdService;
 use App\Services\Order\FindOrderByIdService;
 use App\Repositories\OrderRepository;
+use App\Repositories\ProductRepository;
 use App\Repositories\ProductsOrderRepository;
 use App\Services\Order\DeleteOrderService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Snowfire\Beautymail\Beautymail;
 
 class OrderController extends Controller
 {
@@ -27,11 +29,13 @@ class OrderController extends Controller
             $orderRepository = new OrderRepository();
             $productsOrderRepository = new ProductsOrderRepository();
             $customerRepository = new CustomerRepository();
+            $productRepository = new ProductRepository();
             
             $createOrderService = new CreateOrderService(
                 $orderRepository,
                 $productsOrderRepository,
-                $customerRepository
+                $customerRepository,
+                $productRepository
             );
             $createdOrderId = $createOrderService->create($params);
 

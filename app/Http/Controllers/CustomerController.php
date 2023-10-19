@@ -81,9 +81,7 @@ class CustomerController extends Controller
             $findCustomerByIdService = new FindCustomerByIdService($customerRepository);
             $customersFound = $findCustomerByIdService->find((int) $id);
 
-            return response()->json([
-                'data' => $customersFound
-            ], 200);
+            return response()->json($customersFound, 200);
         } catch (Exception $exception) {
             $messagesError = $this->getMessageException($exception);
 

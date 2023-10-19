@@ -14,16 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:sanctum', function () {
-    // Route::group('/customer', function () {
-    //     Route::post('/', [App\Http\Controllers\CustomerController::class, 'create']);
-    //     Route::get('/', [App\Http\Controllers\CustomerController::class, 'listAll']);
-    //     Route::get('/filters', [App\Http\Controllers\CustomerController::class, 'findByFilters']);
-    //     Route::get('/{id}', [App\Http\Controllers\CustomerController::class, 'findById']);
-    //     Route::put('/{id}', [App\Http\Controllers\CustomerController::class, 'update']);
-    //     Route::delete('/{id}', [App\Http\Controllers\CustomerController::class, 'delete']);
-    // });
-// });
 Route::group(['namespace' => 'Customer', 'prefix' => 'customer'], function () {
     Route::post('/', [App\Http\Controllers\CustomerController::class, 'create']);
     Route::get('/', [App\Http\Controllers\CustomerController::class, 'listAll']);
@@ -38,7 +28,7 @@ Route::group(['namespace' => 'Product', 'prefix' => 'product'], function () {
     Route::get('/', [App\Http\Controllers\ProductController::class, 'listAll']);
     Route::get('/filters', [App\Http\Controllers\ProductController::class, 'findByFilters']);
     Route::get('/{id}', [App\Http\Controllers\ProductController::class, 'findById']);
-    Route::put('/{id}', [App\Http\Controllers\ProductController::class, 'update']);
+    Route::post('/{id}', [App\Http\Controllers\ProductController::class, 'update']);
     Route::delete('/{id}', [App\Http\Controllers\ProductController::class, 'delete']);
     Route::get('/image/{fileName}', [App\Http\Controllers\ProductController::class, 'viewImage']);
 });

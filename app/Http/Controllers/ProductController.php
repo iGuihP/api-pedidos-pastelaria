@@ -107,15 +107,15 @@ class ProductController extends Controller
             $this->validateRequestParameters(
                 [
                     'name' => 'required|string',
-                    'price' => 'required|numeric',
-                    'image' => 'required|string',
+                    'price' => 'required|numeric|gt:0',
+                    'image' => 'required|mimes:jpeg,png,jpg,gif|max:2048',
                 ],
                 $params
             );
 
             $productRepository = new ProductRepository();
             $updateProductService = new UpdateProductService($productRepository);
-            $updateProductService->update($id, $params);
+            $updateProductService->update($id, $params, $request->file('image'));
             
             return response(null, 204);
         } catch (Exception $exception) {

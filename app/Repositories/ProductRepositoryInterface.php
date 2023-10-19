@@ -9,6 +9,7 @@ interface ProductRepositoryInterface
         float $price,
         string $image,
     );
+    public function findByIds(array $ids);
     public function findByFilters(string $name);
     public function findById(int $id);
     public function listAll();

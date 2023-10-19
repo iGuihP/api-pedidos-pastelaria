@@ -14,10 +14,15 @@ class UpdateProductService
         $this->productRepository = $productRepository;
     }
 
-    public function update(int $productId, array $data): void {
+    public function update(int $productId, array $data, $image): void {
         Log::info("Running the service to update a product.", $data);
         
         $productFound = $this->findProductById($productId);
+        if($image) {
+            $uploadPath = $image->store('/', 'local');
+            $data['image'] = $uploadPath;
+        }
+
         $this->updateProduct($productFound, $data);
     }
 

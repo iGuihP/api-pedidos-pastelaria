@@ -66,6 +66,11 @@ class ProductRepository implements ProductRepositoryInterface
         ]);
     }
 
+    public function findByIds(array $ids) {
+        Log::info("Listing products by IDs.");
+        return ProductModel::whereIn('id', $ids)->get();
+    }
+
     public function update($product, array $data) {
         Log::info("Updating a product.");
         return $product->update($data);

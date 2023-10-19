@@ -14,6 +14,12 @@ class DeleteCustomerService
         $this->customerRepository = $customerRepository;
     }
 
+    /**
+     * Deletes a customer by their ID.
+     *
+     * @param int $customerId The ID of the customer to be deleted.
+     * @return void
+     */
     public function delete(int $customerId): void {
         Log::info("Running the service to delete a customer ID: ", ['customer_id' => $customerId]);
         

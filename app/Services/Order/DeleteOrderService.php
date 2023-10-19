@@ -32,7 +32,7 @@ class DeleteOrderService
     }
 
     private function findOrderById(int $orderId) {
-        $orderFound = $this->orderRepository->findById($orderId);
+        $orderFound = $this->orderRepository->findSingleOrderById($orderId);
         if (!$orderFound) {
             throw new Exception("Order not found.", 404);
         }
