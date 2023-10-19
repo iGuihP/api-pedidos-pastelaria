@@ -1,9 +1,9 @@
 <?php
-
 use PHPUnit\Framework\TestCase;
 use App\Services\Product\UpdateProductService;
 use App\Repositories\ProductRepositoryInterface;
 use Illuminate\Support\Facades\Log;
+use Exception;
 
 class UpdateProductServiceTest extends TestCase
 {
@@ -27,6 +27,7 @@ class UpdateProductServiceTest extends TestCase
             'price' => 19.99,
             'description' => 'Updated product description',
         ];
+        $image = null; 
 
         $product = (object)['id' => $productId];
         $this->productRepository->expects($this->once())
@@ -38,7 +39,7 @@ class UpdateProductServiceTest extends TestCase
             ->method('update')
             ->with($product, $productData);
 
-        $this->updateProductService->update($productId, $productData);
+        $this->updateProductService->update($productId, $productData, $image);
     }
 
     public function testUpdateProductNotFound()
@@ -48,6 +49,7 @@ class UpdateProductServiceTest extends TestCase
             'name' => 'Updated Product Name',
             'price' => 19.99,
         ];
+        $image = null; 
 
         $this->productRepository->expects($this->once())
             ->method('findById')
@@ -58,6 +60,6 @@ class UpdateProductServiceTest extends TestCase
         $this->expectExceptionMessage("Product not found.");
         $this->expectExceptionCode(404);
 
-        $this->updateProductService->update($productId, $productData);
+        $this->updateProductService->update($productId, $productData, $image);
     }
 }

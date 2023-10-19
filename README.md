@@ -34,3 +34,6 @@ Sem elas, você não conseguirá criar um novo pedido.</b>
 Após todas as variáveis devidamente configuradas, utilize a migração do Laravel para o banco de dados utilizando o comando `php artisan migrate`.
 
 Se quiser que seeds sejam criadas, utilize o comando `php artisan migrate --seed`
+
+## Testes Unitários
+Para rodar os testes unitários, basta executar o comando `php artisan test`
