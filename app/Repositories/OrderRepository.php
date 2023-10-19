@@ -10,9 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 class OrderRepository implements OrderRepositoryInterface
 {
-    public function create(
-        int $customerId
-    ) {
+    public function create(int $customerId) {
         Log::info("Inserting a new order.", ['customer_id' => $customerId]);
 
         return OrderModel::create([

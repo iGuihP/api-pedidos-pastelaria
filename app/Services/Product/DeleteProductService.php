@@ -29,11 +29,10 @@ class DeleteProductService
         return $productFound;
     }
 
-    private function deleteProduct($product) {
-        $deletedProduct = $this->productRepository->delete(
-            $product,
-        );
-
-        return $deletedProduct;
+    private function deleteProduct($product): void {
+        $deletedProduct = $this->productRepository->delete($product);
+        if (!$deletedProduct) {
+            throw new Exception("Failed to delete a product.", 500);
+        }
     }
 }

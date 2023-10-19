@@ -29,11 +29,10 @@ class DeleteCustomerService
         return $customerFound;
     }
 
-    private function deleteCustomer($customer) {
-        $deletedCustomer = $this->customerRepository->delete(
-            $customer,
-        );
-
-        return $deletedCustomer;
+    private function deleteCustomer($customer): void {
+        $deletedCustomer = $this->customerRepository->delete($customer);
+        if (!$deletedCustomer) {
+            throw new Exception("Failed to delete a customer.", 500);
+        }
     }
 }
