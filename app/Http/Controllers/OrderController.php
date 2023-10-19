@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\CustomerRepository;
 use App\Services\Order\CreateOrderService;
 use App\Services\Order\UpdateOrderService;
 use App\Services\Order\FindOrderByCustomerIdService;
@@ -25,7 +26,13 @@ class OrderController extends Controller
 
             $orderRepository = new OrderRepository();
             $productsOrderRepository = new ProductsOrderRepository();
-            $createOrderService = new CreateOrderService($orderRepository, $productsOrderRepository);
+            $customerRepository = new CustomerRepository();
+            
+            $createOrderService = new CreateOrderService(
+                $orderRepository,
+                $productsOrderRepository,
+                $customerRepository
+            );
             $createdOrderId = $createOrderService->create($params);
 
             return response()->json([
