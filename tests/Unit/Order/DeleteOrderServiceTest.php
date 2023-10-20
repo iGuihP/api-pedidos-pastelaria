@@ -5,7 +5,6 @@ use App\Services\Order\DeleteOrderService;
 use App\Repositories\OrderRepositoryInterface;
 use App\Repositories\ProductsOrderRepositoryInterface;
 use Illuminate\Support\Facades\Log;
-use Exception;
 
 class DeleteOrderServiceTest extends TestCase
 {

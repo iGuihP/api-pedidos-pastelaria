@@ -3,7 +3,6 @@ use PHPUnit\Framework\TestCase;
 use App\Services\Product\UpdateProductService;
 use App\Repositories\ProductRepositoryInterface;
 use Illuminate\Support\Facades\Log;
-use Exception;
 
 class UpdateProductServiceTest extends TestCase
 {
