@@ -2,6 +2,7 @@
 
 use App\Models\ProductModel;
 use Tests\TestCase;
+use App\Traits\ClientRequestTrait;
 use App\Services\Product\ListAllProductsService;
 use App\Repositories\ProductRepositoryInterface;
 use GuzzleHttp\Client;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class ListAllProductsServiceTest extends TestCase
 {
+    use ClientRequestTrait;
     protected $productRepository;
     protected $listAllProductsService;
     protected $clientRequest;
@@ -19,11 +21,6 @@ class ListAllProductsServiceTest extends TestCase
         parent::setUp();
         $this->productRepository = $this->createMock(ProductRepositoryInterface::class);
         $this->listAllProductsService = new ListAllProductsService($this->productRepository);
-
-        $this->clientRequest = new Client([
-            'base_uri' => 'http://localhost:5000',
-        ]);
-
         Log::shouldReceive('info');
     }
 
@@ -58,7 +55,7 @@ class ListAllProductsServiceTest extends TestCase
 
     public function testListAllProductsEndpoint() {
         ProductModel::factory()->create();
-        $response = $this->clientRequest->get('/api/product/');
+        $response = $this->requestClient()->get('/api/product/');
         $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);
         $this->assertGreaterThan(0, count($data['data']), 'A resposta deve conter mais de um elemento no array');

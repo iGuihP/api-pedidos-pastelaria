@@ -5,6 +5,7 @@ use App\Models\OrderModel;
 use App\Models\ProductModel;
 use App\Models\ProductsOrderModel;
 use Tests\TestCase;
+use App\Traits\ClientRequestTrait;
 use App\Services\Order\FindOrderByIdService;
 use App\Repositories\OrderRepositoryInterface;
 use GuzzleHttp\Client;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 class FindOrderByIdServiceTest extends TestCase
 {
+    use ClientRequestTrait;
     protected $orderRepository;
     protected $findOrderByIdService;
     protected $clientRequest;
@@ -21,11 +23,6 @@ class FindOrderByIdServiceTest extends TestCase
         parent::setUp();
         $this->orderRepository = $this->createMock(OrderRepositoryInterface::class);
         $this->findOrderByIdService = new FindOrderByIdService($this->orderRepository);
-
-        $this->clientRequest = new Client([
-            'base_uri' => 'http://localhost:5000',
-        ]);
-
         Log::shouldReceive('info');
     }
 
@@ -91,7 +88,7 @@ class FindOrderByIdServiceTest extends TestCase
             'product_id' => $productOrder->id
         ]);
 
-        $response = $this->clientRequest->get('/api/order/' . $order->id);
+        $response = $this->requestClient()->get('/api/order/' . $order->id);
 
         $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);

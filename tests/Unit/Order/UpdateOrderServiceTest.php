@@ -5,6 +5,7 @@ use App\Models\OrderModel;
 use App\Models\ProductModel;
 use App\Models\ProductsOrderModel;
 use Tests\TestCase;
+use App\Traits\ClientRequestTrait;
 use App\Services\Order\UpdateOrderService;
 use App\Repositories\OrderRepositoryInterface;
 use App\Repositories\ProductsOrderRepositoryInterface;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 
 class UpdateOrderServiceTest extends TestCase
 {
+    use ClientRequestTrait;
     protected $orderRepository;
     protected $productsOrderRepository;
     protected $updateOrderService;
@@ -25,9 +27,7 @@ class UpdateOrderServiceTest extends TestCase
         $this->productsOrderRepository = $this->createMock(ProductsOrderRepositoryInterface::class);
         $this->updateOrderService = new UpdateOrderService($this->orderRepository, $this->productsOrderRepository);
 
-        $this->clientRequest = new Client([
-            'base_uri' => 'http://localhost:5000',
-        ]);
+        
 
         // Suppress logging during tests
         Log::shouldReceive('info');
@@ -85,7 +85,7 @@ class UpdateOrderServiceTest extends TestCase
         ]);
         $productOrder = ProductModel::factory()->create();
 
-        $response = $this->clientRequest->put('/api/order/' . $order->id, [
+        $response = $this->requestClient()->put('/api/order/' . $order->id, [
             'json' => [
                 'productsId' => [ $productOrder->id ],
             ]

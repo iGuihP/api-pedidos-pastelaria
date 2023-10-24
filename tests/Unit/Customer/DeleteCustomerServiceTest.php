@@ -2,6 +2,7 @@
 
 use App\Models\CustomerModel;
 use Tests\TestCase;
+use App\Traits\ClientRequestTrait;
 use App\Services\Customer\DeleteCustomerService;
 use App\Repositories\CustomerRepositoryInterface;
 use GuzzleHttp\Client;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class DeleteCustomerServiceTest extends TestCase
 {
+    use ClientRequestTrait;
     protected $customerRepository;
     protected $deleteCustomerService;
     protected $requestClient;
@@ -19,10 +21,6 @@ class DeleteCustomerServiceTest extends TestCase
         parent::setUp();
         $this->customerRepository = $this->createMock(CustomerRepositoryInterface::class);
         $this->deleteCustomerService = new DeleteCustomerService($this->customerRepository);
-        $this->requestClient = new Client([
-            'base_uri' => 'http://localhost:5000',
-        ]);
-
         Log::shouldReceive('info');
     }
 
@@ -61,7 +59,7 @@ class DeleteCustomerServiceTest extends TestCase
 
     public function testDeleteCustomerEndpoint() {
         $customer = CustomerModel::factory()->create();
-        $response = $this->requestClient->delete('/api/customer/' . $customer->id);
+        $response = $this->requestClient()->delete('/api/customer/' . $customer->id);
         $this->assertEquals(204, $response->getStatusCode());
     }
 }

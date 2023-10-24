@@ -5,6 +5,7 @@ use App\Models\OrderModel;
 use App\Models\ProductModel;
 use App\Models\ProductsOrderModel;
 use Tests\TestCase;
+use App\Traits\ClientRequestTrait;
 use App\Services\Order\FindOrderByCustomerIdService;
 use App\Repositories\OrderRepositoryInterface;
 use Database\Factories\OrderModelFactory;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 
 class FindOrderByCustomerIdServiceTest extends TestCase
 {
+    use ClientRequestTrait;
     protected $orderRepository;
     protected $findOrderByCustomerIdService;
     protected $clientRequest;
@@ -23,11 +25,6 @@ class FindOrderByCustomerIdServiceTest extends TestCase
         parent::setUp();
         $this->orderRepository = $this->createMock(OrderRepositoryInterface::class);
         $this->findOrderByCustomerIdService = new FindOrderByCustomerIdService($this->orderRepository);
-
-        $this->clientRequest = new Client([
-            'base_uri' => 'http://localhost:5000',
-        ]);
-
         Log::shouldReceive('info');
     }
 
@@ -98,7 +95,7 @@ class FindOrderByCustomerIdServiceTest extends TestCase
             'product_id' => $productOrder->id
         ]);
 
-        $response = $this->clientRequest->get('/api/order/customer/' . $order->customer_id);
+        $response = $this->requestClient()->get('/api/order/customer/' . $order->customer_id);
 
         $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);

@@ -3,6 +3,7 @@
 use App\Models\CustomerModel;
 use App\Models\OrderModel;
 use Tests\TestCase;
+use App\Traits\ClientRequestTrait;
 use App\Services\Order\DeleteOrderService;
 use App\Repositories\OrderRepositoryInterface;
 use App\Repositories\ProductsOrderRepositoryInterface;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 
 class DeleteOrderServiceTest extends TestCase
 {
+    use ClientRequestTrait;
     protected $orderRepository;
     protected $productsOrderRepository;
     protected $deleteOrderService;
@@ -23,10 +25,6 @@ class DeleteOrderServiceTest extends TestCase
         $this->productsOrderRepository = $this->createMock(ProductsOrderRepositoryInterface::class);
         $this->deleteOrderService = new DeleteOrderService($this->orderRepository, $this->productsOrderRepository);
         
-        $this->requestClient = new Client([
-            'base_uri' => 'http://localhost:5000',
-        ]);
-
         Log::shouldReceive('info');
     }
 
@@ -69,7 +67,7 @@ class DeleteOrderServiceTest extends TestCase
 
     public function testDeleteOrderEndpoint() {
         $order = OrderModel::factory()->create();
-        $response = $this->requestClient->delete('/api/order/' . $order->id);
+        $response = $this->requestClient()->delete('/api/order/' . $order->id);
         $this->assertEquals(204, $response->getStatusCode());
     }
 }

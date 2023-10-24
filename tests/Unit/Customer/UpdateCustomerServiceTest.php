@@ -3,6 +3,7 @@
 
 use App\Models\CustomerModel;
 use Tests\TestCase;
+use App\Traits\ClientRequestTrait;
 use App\Services\Customer\UpdateCustomerService;
 use App\Repositories\CustomerRepositoryInterface;
 use GuzzleHttp\Client;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class UpdateCustomerServiceTest extends TestCase
 {
+    use ClientRequestTrait;
     protected $customerRepository;
     protected $updateCustomerService;
     protected $requestClient;
@@ -20,9 +22,7 @@ class UpdateCustomerServiceTest extends TestCase
         $this->customerRepository = $this->createMock(CustomerRepositoryInterface::class);
         $this->updateCustomerService = new UpdateCustomerService($this->customerRepository);
 
-        $this->requestClient = new Client([
-            'base_uri' => 'http://localhost:5000',
-        ]);
+        
 
         // Suppress logging during tests
         Log::shouldReceive('info');
@@ -71,7 +71,7 @@ class UpdateCustomerServiceTest extends TestCase
 
     public function testDeleteCustomerEndpoint() {
         $customer = CustomerModel::factory()->create();
-        $response = $this->requestClient->put('/api/customer/' . $customer->id, [
+        $response = $this->requestClient()->put('/api/customer/' . $customer->id, [
             'json' => [
                 'name' => fake()->name(),
                 'email' => fake()->unique()->safeEmail(),

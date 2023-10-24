@@ -2,6 +2,7 @@
 
 use App\Models\ProductModel;
 use Tests\TestCase;
+use App\Traits\ClientRequestTrait;
 use App\Services\Product\FindProductByFilterService;
 use App\Repositories\ProductRepositoryInterface;
 use GuzzleHttp\Client;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 class FindProductByFilterServiceTest extends TestCase
 {
+    use ClientRequestTrait;
     protected $productRepository;
     protected $findProductByFilterService;
     protected $requestClient;
@@ -19,10 +21,6 @@ class FindProductByFilterServiceTest extends TestCase
         $this->productRepository = $this->createMock(ProductRepositoryInterface::class);
         $this->findProductByFilterService = new FindProductByFilterService($this->productRepository);
         
-        $this->requestClient = new Client([
-            'base_uri' => 'http://localhost:5000',
-        ]);
-
         Log::shouldReceive('info');
     }
 
@@ -63,7 +61,7 @@ class FindProductByFilterServiceTest extends TestCase
 
     public function testFindProductsByFiltersEndpoint() {
         $product = ProductModel::factory()->create();
-        $response = $this->requestClient->get('/api/product/filters', [
+        $response = $this->requestClient()->get('/api/product/filters', [
             'query' => [
                 'name' => $product->name,
             ]
@@ -74,7 +72,7 @@ class FindProductByFilterServiceTest extends TestCase
     }
 
     public function testFindProductsNotFoundByFiltersEndpoint() {
-        $response = $this->requestClient->get('/api/product/filters', [
+        $response = $this->requestClient()->get('/api/product/filters', [
             'query' => [
                 'name' => 'product_not_found',
             ]

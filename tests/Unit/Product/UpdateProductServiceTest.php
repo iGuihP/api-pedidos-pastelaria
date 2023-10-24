@@ -2,6 +2,7 @@
 
 use App\Models\ProductModel;
 use Tests\TestCase;
+use App\Traits\ClientRequestTrait;
 use App\Services\Product\UpdateProductService;
 use App\Repositories\ProductRepositoryInterface;
 use GuzzleHttp\Client;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class UpdateProductServiceTest extends TestCase
 {
+    use ClientRequestTrait;
     protected $productRepository;
     protected $updateProductService;
     protected $requestClient;
@@ -19,10 +21,6 @@ class UpdateProductServiceTest extends TestCase
         parent::setUp();
         $this->productRepository = $this->createMock(ProductRepositoryInterface::class);
         $this->updateProductService = new UpdateProductService($this->productRepository);
-        $this->requestClient = new Client([
-            'base_uri' => 'http://localhost:5000',
-        ]);
-
         Log::shouldReceive('info');
     }
 
@@ -80,7 +78,7 @@ class UpdateProductServiceTest extends TestCase
         imagejpeg($image, $imagePath);
         $imageContent = file_get_contents($imagePath);
 
-        $response = $this->requestClient->post('/api/product/' . $product->id, [
+        $response = $this->requestClient()->post('/api/product/' . $product->id, [
             'multipart' => [
                 [
                     'name'     => 'name',

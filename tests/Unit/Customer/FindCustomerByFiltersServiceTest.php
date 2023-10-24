@@ -2,6 +2,7 @@
 
 use App\Models\CustomerModel;
 use Tests\TestCase;
+use App\Traits\ClientRequestTrait;
 use App\Services\Customer\FindCustomerService;
 use App\Repositories\CustomerRepositoryInterface;
 use GuzzleHttp\Client;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class FindCustomerByFiltersServiceTest extends TestCase
 {
+    use ClientRequestTrait;
     
     protected $customerRepository;
     protected $findCustomerService;
@@ -20,9 +22,7 @@ class FindCustomerByFiltersServiceTest extends TestCase
         parent::setUp();
         $this->customerRepository = $this->createMock(CustomerRepositoryInterface::class);
         $this->findCustomerService = new FindCustomerService($this->customerRepository);
-        $this->clientRequest = new Client([
-            'base_uri' => 'http://localhost:5000',
-        ]);
+        
 
         Log::shouldReceive('info');
     }
@@ -99,7 +99,7 @@ class FindCustomerByFiltersServiceTest extends TestCase
 
     public function testFindCustomerByFiltersEndpoint() {
         $customer = CustomerModel::factory()->create();
-        $response = $this->clientRequest->get('/api/customer/filters', [
+        $response = $this->requestClient()->get('/api/customer/filters', [
             'query' => [
                 'name' => $customer->name,
                 'email' => $customer->email,
@@ -111,7 +111,7 @@ class FindCustomerByFiltersServiceTest extends TestCase
     }
 
     public function testFindCustomerNotFoundByFiltersEndpoint() {
-        $response = $this->clientRequest->get('/api/customer/filters', [
+        $response = $this->requestClient()->get('/api/customer/filters', [
             'query' => [
                 'name' => 'user_not_found',
                 'email' => 'email_not_found@example.com',

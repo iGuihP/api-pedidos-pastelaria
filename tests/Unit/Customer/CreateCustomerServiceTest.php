@@ -1,6 +1,7 @@
 <?php
 
 use Tests\TestCase;
+use App\Traits\ClientRequestTrait;
 use App\Services\Customer\CreateCustomerService;
 use App\Repositories\CustomerRepositoryInterface;
 use GuzzleHttp\Client;
@@ -8,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 class CreateCustomerServiceTest extends TestCase
 {
+    use ClientRequestTrait;
     protected $customerRepository;
     protected $createCustomerService;
     protected $requestClient;
@@ -18,10 +20,6 @@ class CreateCustomerServiceTest extends TestCase
 
         $this->customerRepository = $this->createMock(CustomerRepositoryInterface::class);
         $this->createCustomerService = new CreateCustomerService($this->customerRepository);
-        $this->requestClient = new Client([
-            'base_uri' => 'http://localhost:5000',
-        ]);
-
         Log::shouldReceive('info');
     }
 
@@ -71,7 +69,7 @@ class CreateCustomerServiceTest extends TestCase
             'zipcode' => str_replace("-", "", fake('pt_BR')->postcode()),
         ];
 
-        $response = $this->requestClient->post('/api/customer', [
+        $response = $this->requestClient()->post('/api/customer', [
             'json' => $data,
         ]);
 

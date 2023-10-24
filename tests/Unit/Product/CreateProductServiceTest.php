@@ -3,26 +3,22 @@
 use Tests\TestCase;
 use App\Services\Product\CreateProductService;
 use App\Repositories\ProductRepositoryInterface;
-use GuzzleHttp\Client;
+use App\Traits\ClientRequestTrait;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 
 class CreateProductServiceTest extends TestCase
 {
+    use ClientRequestTrait;
     protected $productRepository;
     protected $createProductService;
-    protected $requestClient;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->productRepository = $this->createMock(ProductRepositoryInterface::class);
         $this->createProductService = new CreateProductService($this->productRepository);
-
-        $this->requestClient = new Client([
-            'base_uri' => 'http://localhost:5000',
-        ]);
 
         Log::shouldReceive('info');
     }
@@ -60,7 +56,7 @@ class CreateProductServiceTest extends TestCase
         imagejpeg($image, $imagePath);
         $imageContent = file_get_contents($imagePath);
 
-        $response = $this->requestClient->post('/api/product', [
+        $response = $this->requestClient()->post('/api/product', [
             'multipart' => [
                 [
                     'name'     => 'name',

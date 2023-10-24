@@ -2,6 +2,7 @@
 
 use App\Models\CustomerModel;
 use Tests\TestCase;
+use App\Traits\ClientRequestTrait;
 use App\Services\Customer\FindCustomerByIdService;
 use App\Repositories\CustomerRepositoryInterface;
 use Database\Factories\CustomerModelFactory;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 
 class FindCustomerByIdServiceTest extends TestCase
 {
+    use ClientRequestTrait;
     protected $customerRepository;
     protected $findCustomerService;
     protected $clientRequest;
@@ -20,11 +22,6 @@ class FindCustomerByIdServiceTest extends TestCase
         parent::setUp();
         $this->customerRepository = $this->createMock(CustomerRepositoryInterface::class);
         $this->findCustomerService = new FindCustomerByIdService($this->customerRepository);
-
-        $this->clientRequest = new Client([
-            'base_uri' => 'http://localhost:5000',
-        ]);
-
         Log::shouldReceive('info');
     }
 
@@ -46,7 +43,7 @@ class FindCustomerByIdServiceTest extends TestCase
     public function testFindCustomerByIdEndpoint() {
         $customer = CustomerModel::factory()->create();
         $this->assertDatabaseHas('customers', ['id' => $customer->id]);
-        $response = $this->clientRequest->get('/api/customer/' . $customer->id);
+        $response = $this->requestClient()->get('/api/customer/' . $customer->id);
 
         $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);
