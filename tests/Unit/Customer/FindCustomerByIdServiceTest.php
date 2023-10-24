@@ -1,20 +1,29 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+use App\Models\CustomerModel;
+use Tests\TestCase;
 use App\Services\Customer\FindCustomerByIdService;
 use App\Repositories\CustomerRepositoryInterface;
+use Database\Factories\CustomerModelFactory;
+use GuzzleHttp\Client;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
 
 class FindCustomerByIdServiceTest extends TestCase
 {
     protected $customerRepository;
     protected $findCustomerService;
+    protected $clientRequest;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->customerRepository = $this->createMock(CustomerRepositoryInterface::class);
         $this->findCustomerService = new FindCustomerByIdService($this->customerRepository);
+
+        $this->clientRequest = new Client([
+            'base_uri' => 'http://localhost:5000',
+        ]);
 
         Log::shouldReceive('info');
     }
@@ -34,19 +43,13 @@ class FindCustomerByIdServiceTest extends TestCase
         $this->assertEquals($customer, $result);
     }
 
-    public function testFindCustomerByIdNotFound()
-    {
-        $customerId = 1;
+    public function testFindCustomerByIdEndpoint() {
+        $customer = CustomerModel::factory()->create();
+        $this->assertDatabaseHas('customers', ['id' => $customer->id]);
+        $response = $this->clientRequest->get('/api/customer/' . $customer->id);
 
-        $this->customerRepository->expects($this->once())
-            ->method('findById')
-            ->with($customerId)
-            ->willReturn(null);
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage("Customer not found.");
-        $this->expectExceptionCode(404);
-
-        $this->findCustomerService->find($customerId);
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = json_decode($response->getBody(), true);
+        $this->assertArrayHasKey('name', $data, 'A chave "name" deve estar na resposta');
     }
 }

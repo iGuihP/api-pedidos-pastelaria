@@ -1,20 +1,26 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+use App\Models\ProductModel;
+use Tests\TestCase;
 use App\Services\Product\DeleteProductService;
 use App\Repositories\ProductRepositoryInterface;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 
 class DeleteProductServiceTest extends TestCase
 {
     protected $productRepository;
     protected $deleteProductService;
+    protected $requestClient;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->productRepository = $this->createMock(ProductRepositoryInterface::class);
         $this->deleteProductService = new DeleteProductService($this->productRepository);
+        $this->requestClient = new Client([
+            'base_uri' => 'http://localhost:5000',
+        ]);
 
         Log::shouldReceive('info');
     }
@@ -50,5 +56,12 @@ class DeleteProductServiceTest extends TestCase
         $this->expectExceptionCode(404);
 
         $this->deleteProductService->delete($productId);
+    }
+
+    public function testDeletePustomerEndpoint()
+    {
+        $product = ProductModel::factory()->create();
+        $response = $this->requestClient->delete('/api/product/'.$product->id);
+        $this->assertEquals(204, $response->getStatusCode());
     }
 }

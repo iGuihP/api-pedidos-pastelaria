@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CustomerModel extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
     protected $table = 'customers';
     protected $fillable = [
         'name',
@@ -20,6 +20,4 @@ class CustomerModel extends Model
         'neighborhood',
         'zipcode'
     ];
-    
-    use HasFactory;
 }

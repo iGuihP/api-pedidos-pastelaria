@@ -1,20 +1,28 @@
 <?php
-use PHPUnit\Framework\TestCase;
+
+use Tests\TestCase;
 use App\Services\Product\CreateProductService;
 use App\Repositories\ProductRepositoryInterface;
+use GuzzleHttp\Client;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
 
 class CreateProductServiceTest extends TestCase
 {
     protected $productRepository;
     protected $createProductService;
+    protected $requestClient;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->productRepository = $this->createMock(ProductRepositoryInterface::class);
         $this->createProductService = new CreateProductService($this->productRepository);
+
+        $this->requestClient = new Client([
+            'base_uri' => 'http://localhost:5000',
+        ]);
 
         Log::shouldReceive('info');
     }
@@ -42,5 +50,36 @@ class CreateProductServiceTest extends TestCase
         $result = $this->createProductService->create($productData, $uploadedFile);
 
         $this->assertEquals($createdProduct->id, $result);
+    }
+
+    public function testCreateProductEndpoint()
+    {
+        $filename = md5(fake()->unique()->word()) . '.jpg';
+        $image = imagecreatetruecolor(200, 200);
+        $imagePath = storage_path('app/public/fake_images/' . $filename);
+        imagejpeg($image, $imagePath);
+        $imageContent = file_get_contents($imagePath);
+
+        $response = $this->requestClient->post('/api/product', [
+            'multipart' => [
+                [
+                    'name'     => 'name',
+                    'contents' => fake()->word(),
+                ],
+                [
+                    'name'     => 'price',
+                    'contents' => fake()->randomFloat(2, 0, 100),
+                ],
+                [
+                    'name'     => 'image',
+                    'contents' => $imageContent,
+                    'filename' => $filename,
+                ],
+            ],
+        ]);
+
+        File::delete($imagePath);
+
+        $this->assertEquals(201, $response->getStatusCode());
     }
 }

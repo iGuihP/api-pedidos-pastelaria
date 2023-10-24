@@ -1,14 +1,16 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 use App\Services\Customer\CreateCustomerService;
 use App\Repositories\CustomerRepositoryInterface;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 
 class CreateCustomerServiceTest extends TestCase
 {
     protected $customerRepository;
     protected $createCustomerService;
+    protected $requestClient;
 
     public function setUp(): void
     {
@@ -16,6 +18,9 @@ class CreateCustomerServiceTest extends TestCase
 
         $this->customerRepository = $this->createMock(CustomerRepositoryInterface::class);
         $this->createCustomerService = new CreateCustomerService($this->customerRepository);
+        $this->requestClient = new Client([
+            'base_uri' => 'http://localhost:5000',
+        ]);
 
         Log::shouldReceive('info');
     }
@@ -23,14 +28,14 @@ class CreateCustomerServiceTest extends TestCase
     public function testCreateCustomer()
     {
         $params = [
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
-            'telephone' => '123-456-7890',
-            'birth' => '1990-01-01',
-            'address' => '123 Main St',
-            'complement' => 'Apt 4B',
-            'neighborhood' => 'Downtown',
-            'zipcode' => '12345678',
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'telephone' => fake('pt_BR')->cellphone(),
+            'birth' => fake()->date(),
+            'address' => fake()->streetAddress(),
+            'complement' => fake()->secondaryAddress(),
+            'neighborhood' => fake()->streetSuffix(),
+            'zipcode' => str_replace("-", "", fake('pt_BR')->postcode()),
         ];
 
         $createdCustomer = (object)['id' => 1];
@@ -51,5 +56,28 @@ class CreateCustomerServiceTest extends TestCase
         $customerId = $this->createCustomerService->create($params);
 
         $this->assertEquals($createdCustomer->id, $customerId);
+    }
+
+    public function testCreateCustomerEndpoint()
+    {
+        $data = [
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'telephone' => fake('pt_BR')->cellphone(),
+            'birth' => fake()->date(),
+            'address' => fake()->streetAddress(),
+            'complement' => fake()->secondaryAddress(),
+            'neighborhood' => fake()->streetSuffix(),
+            'zipcode' => str_replace("-", "", fake('pt_BR')->postcode()),
+        ];
+
+        $response = $this->requestClient->post('/api/customer', [
+            'json' => $data,
+        ]);
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $responseData = json_decode($response->getBody(), true);
+        $this->assertArrayHasKey('newCustomerId', $responseData);
     }
 }

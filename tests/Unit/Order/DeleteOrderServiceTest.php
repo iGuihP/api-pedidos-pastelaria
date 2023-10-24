@@ -1,9 +1,12 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+use App\Models\CustomerModel;
+use App\Models\OrderModel;
+use Tests\TestCase;
 use App\Services\Order\DeleteOrderService;
 use App\Repositories\OrderRepositoryInterface;
 use App\Repositories\ProductsOrderRepositoryInterface;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 
 class DeleteOrderServiceTest extends TestCase
@@ -11,6 +14,7 @@ class DeleteOrderServiceTest extends TestCase
     protected $orderRepository;
     protected $productsOrderRepository;
     protected $deleteOrderService;
+    protected $requestClient;
 
     public function setUp(): void
     {
@@ -18,6 +22,10 @@ class DeleteOrderServiceTest extends TestCase
         $this->orderRepository = $this->createMock(OrderRepositoryInterface::class);
         $this->productsOrderRepository = $this->createMock(ProductsOrderRepositoryInterface::class);
         $this->deleteOrderService = new DeleteOrderService($this->orderRepository, $this->productsOrderRepository);
+        
+        $this->requestClient = new Client([
+            'base_uri' => 'http://localhost:5000',
+        ]);
 
         Log::shouldReceive('info');
     }
@@ -57,5 +65,11 @@ class DeleteOrderServiceTest extends TestCase
         $this->expectExceptionCode(404);
 
         $this->deleteOrderService->delete($orderId);
+    }
+
+    public function testDeleteOrderEndpoint() {
+        $order = OrderModel::factory()->create();
+        $response = $this->requestClient->delete('/api/order/' . $order->id);
+        $this->assertEquals(204, $response->getStatusCode());
     }
 }

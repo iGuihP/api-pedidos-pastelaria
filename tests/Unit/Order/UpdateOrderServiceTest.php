@@ -1,9 +1,14 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+use App\Models\CustomerModel;
+use App\Models\OrderModel;
+use App\Models\ProductModel;
+use App\Models\ProductsOrderModel;
+use Tests\TestCase;
 use App\Services\Order\UpdateOrderService;
 use App\Repositories\OrderRepositoryInterface;
 use App\Repositories\ProductsOrderRepositoryInterface;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 
 class UpdateOrderServiceTest extends TestCase
@@ -11,6 +16,7 @@ class UpdateOrderServiceTest extends TestCase
     protected $orderRepository;
     protected $productsOrderRepository;
     protected $updateOrderService;
+    protected $clientRequest;
 
     public function setUp(): void
     {
@@ -18,6 +24,10 @@ class UpdateOrderServiceTest extends TestCase
         $this->orderRepository = $this->createMock(OrderRepositoryInterface::class);
         $this->productsOrderRepository = $this->createMock(ProductsOrderRepositoryInterface::class);
         $this->updateOrderService = new UpdateOrderService($this->orderRepository, $this->productsOrderRepository);
+
+        $this->clientRequest = new Client([
+            'base_uri' => 'http://localhost:5000',
+        ]);
 
         // Suppress logging during tests
         Log::shouldReceive('info');
@@ -66,5 +76,21 @@ class UpdateOrderServiceTest extends TestCase
         $this->expectExceptionCode(404);
 
         $this->updateOrderService->update($orderId, $newProductsId);
+    }
+
+    public function testUpdateOrderEndpoint() {
+        $customer = CustomerModel::factory()->create();
+        $order = OrderModel::factory()->create([
+            'customer_id' => $customer->id,
+        ]);
+        $productOrder = ProductModel::factory()->create();
+
+        $response = $this->clientRequest->put('/api/order/' . $order->id, [
+            'json' => [
+                'productsId' => [ $productOrder->id ],
+            ]
+        ]);
+
+        $this->assertEquals(204, $response->getStatusCode());
     }
 }

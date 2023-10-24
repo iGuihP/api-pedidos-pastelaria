@@ -1,20 +1,27 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+use App\Models\ProductModel;
+use Tests\TestCase;
 use App\Services\Product\FindProductByIdService;
 use App\Repositories\ProductRepositoryInterface;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 
 class FindProductByIdServiceTest extends TestCase
 {
     protected $productRepository;
     protected $findProductByIdService;
+    protected $clientRequest;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->productRepository = $this->createMock(ProductRepositoryInterface::class);
         $this->findProductByIdService = new FindProductByIdService($this->productRepository);
+
+        $this->clientRequest = new Client([
+            'base_uri' => 'http://localhost:5000',
+        ]);
 
         Log::shouldReceive('info');
     }
@@ -48,5 +55,15 @@ class FindProductByIdServiceTest extends TestCase
         $this->expectExceptionCode(404);
 
         $this->findProductByIdService->find($productId);
+    }
+
+    public function testFindProductByIdEndpoint() {
+        $product = ProductModel::factory()->create();
+        $this->assertDatabaseHas('products', ['id' => $product->id]);
+        $response = $this->clientRequest->get('/api/product/' . $product->id);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = json_decode($response->getBody(), true);
+        $this->assertArrayHasKey('name', $data, 'A chave "name" deve estar na resposta');
     }
 }

@@ -1,20 +1,27 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+use App\Models\CustomerModel;
+use Tests\TestCase;
 use App\Services\Customer\DeleteCustomerService;
 use App\Repositories\CustomerRepositoryInterface;
+use GuzzleHttp\Client;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
 
 class DeleteCustomerServiceTest extends TestCase
 {
     protected $customerRepository;
     protected $deleteCustomerService;
+    protected $requestClient;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->customerRepository = $this->createMock(CustomerRepositoryInterface::class);
         $this->deleteCustomerService = new DeleteCustomerService($this->customerRepository);
+        $this->requestClient = new Client([
+            'base_uri' => 'http://localhost:5000',
+        ]);
 
         Log::shouldReceive('info');
     }
@@ -50,5 +57,11 @@ class DeleteCustomerServiceTest extends TestCase
         $this->expectExceptionCode(404);
 
         $this->deleteCustomerService->delete($customerId);
+    }
+
+    public function testDeleteCustomerEndpoint() {
+        $customer = CustomerModel::factory()->create();
+        $response = $this->requestClient->delete('/api/customer/' . $customer->id);
+        $this->assertEquals(204, $response->getStatusCode());
     }
 }

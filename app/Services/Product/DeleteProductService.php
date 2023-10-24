@@ -4,6 +4,7 @@ namespace App\Services\Product;
 
 use App\Repositories\ProductRepositoryInterface;
 use Exception;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 
 class DeleteProductService
@@ -18,6 +19,8 @@ class DeleteProductService
         Log::info("Running the service to delete a product ID: ". $productId);
         
         $productFound = $this->findProductById($productId);
+        // $productData = $productFound->first();
+        // File::delete(storage_path('app/public/' . $productData->image));
         $this->deleteProduct($productFound);
     }
 

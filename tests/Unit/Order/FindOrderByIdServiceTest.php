@@ -1,20 +1,30 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+use App\Models\CustomerModel;
+use App\Models\OrderModel;
+use App\Models\ProductModel;
+use App\Models\ProductsOrderModel;
+use Tests\TestCase;
 use App\Services\Order\FindOrderByIdService;
 use App\Repositories\OrderRepositoryInterface;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 
 class FindOrderByIdServiceTest extends TestCase
 {
     protected $orderRepository;
     protected $findOrderByIdService;
+    protected $clientRequest;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->orderRepository = $this->createMock(OrderRepositoryInterface::class);
         $this->findOrderByIdService = new FindOrderByIdService($this->orderRepository);
+
+        $this->clientRequest = new Client([
+            'base_uri' => 'http://localhost:5000',
+        ]);
 
         Log::shouldReceive('info');
     }
@@ -26,7 +36,7 @@ class FindOrderByIdServiceTest extends TestCase
         $order = (object)[
             'order_id' => $orderId,
             'customer_id' => 1,
-            'customer_name' => 'John Doe',
+            'customer_name' => 'name',
             'product_name' => 'Product 1',
             'product_price' => 10.0,
             'product_image' => 'product.jpg',
@@ -41,7 +51,7 @@ class FindOrderByIdServiceTest extends TestCase
         $expectedResult = [
             'order_id' => $orderId,
             'customer_id' => 1,
-            'customer_name' => 'John Doe',
+            'customer_name' => 'name',
             'products' => [
                 [
                     'name' => 'Product 1',
@@ -68,5 +78,23 @@ class FindOrderByIdServiceTest extends TestCase
         $this->expectExceptionCode(404);
 
         $this->findOrderByIdService->find($orderId);
+    }
+
+    public function testFindCustomerByIdNotFoundEndpoint() {
+        $customer = CustomerModel::factory()->create();
+        $order = OrderModel::factory()->create([
+            'customer_id' => $customer->id,
+        ]);
+        $productOrder = ProductModel::factory()->create();
+        ProductsOrderModel::factory()->create([
+            'order_id' => $order->id,
+            'product_id' => $productOrder->id
+        ]);
+
+        $response = $this->clientRequest->get('/api/order/' . $order->id);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = json_decode($response->getBody(), true);
+        $this->assertArrayHasKey('order_id', $data, 'A chave "order_id" deve estar na resposta');
     }
 }

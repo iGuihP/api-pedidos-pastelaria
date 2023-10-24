@@ -42,8 +42,9 @@ COPY .docker/xdebug.ini /etc/php81/conf.d/docker-php-ext-xdebug.ini
 FROM default AS build
 ENV ENV=production
 WORKDIR /var/www/html
-COPY . /var/www/html
+COPY . .
 RUN composer install --no-dev --optimize-autoloader
+COPY . .
 
 FROM default AS prod
 ENV ENV=production
